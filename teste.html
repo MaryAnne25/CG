@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset=utf-8>
+  <title>Atividade I - Computação Gráfica</title>
+  <!--  Three.js CDN  -->
+  <script src="js/three.js"></script>
+	<script src="js/inflate.min.js"></script>
+  <script src="js/ColladaLoader.js"></script>
+  <script src="js/OrbitControls.js"></script> 
+  <style>
+      body { margin: 0; }
+      canvas { width: 100%; height: 100% }
+  </style>
+</head>
+
+<body>
+
+  <script>
+    // ------------------------------------------------
+    // BASIC SETUP
+    // ------------------------------------------------
+
+    // Create an empty scene
+    var scene = new THREE.Scene();
+
+    // Create a basic perspective camera
+    var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 10000 );
+
+    // Create a renderer with Antialiasing
+    var renderer = new THREE.WebGLRenderer({antialias: true});
+
+    // Configure renderer clear color
+    renderer.setClearColor("#fff");
+
+    // Configure renderer size
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    // Append Renderer to DOM
+    document.body.appendChild( renderer.domElement );
+
+    var controls = new THREE.OrbitControls( camera );
+    controls.enabled = true;
+
+    console.log(controls);
+
+
+    camera.position.set(10, 10, 10);
+    controls.update();
+
+    // ------------------------------------------------
+    // FUN STARTS HERE
+    // ------------------------------------------------
+
+    // Create a Cube Mesh with basic material
+   // var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+   // var material = new THREE.MeshBasicMaterial( { color: "#433F81" } );
+   // var cube = new THREE.Mesh( geometry, material );
+
+    var eevee = null;
+
+    // Add cube to Scene
+    // scene.add( cube );
+
+
+
+    // instantiate a loader
+    var loader = new THREE.ColladaLoader();
+
+    // load a resource
+    loader.load('Eevee/Eevee_ColladaMax.dae', function ( obj ) {
+        eevee = obj;
+		console.log(eevee);
+        scene.add(obj);
+      }
+    );
+
+    // Render Loop
+    var animate = function () {
+      requestAnimationFrame( animate );
+
+     // if(eevee !== null){        
+        // eevee.rotation.x += 0.01;
+     //   eevee.rotation.y += 0.01;
+        // eevee.rotation.z += 0.01;
+     //}
+
+      controls.update();
+
+
+      // Render the scene
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    window.addEventListener('keydown', onKeyDown, false);
+
+    function onKeyDown(e) {
+
+      var stepScale = 0.5;
+
+      if (e.which == 38) {
+
+        eevee.scale['x'] += stepScale;
+        eevee.scale['y'] += stepScale;
+        eevee.scale['z'] += stepScale;
+
+      }
+      else if(e.which == 40 && eevee.scale['x'] > 1){
+        
+        eevee.scale['x'] -= stepScale;
+        eevee.scale['y'] -= stepScale;
+        eevee.scale['z'] -= stepScale;
+
+      }
+
+    }
+
+  </script>
+</body>
+
+</html>
